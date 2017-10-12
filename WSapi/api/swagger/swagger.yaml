@@ -1,0 +1,200 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Movecare Users API
+# during dev, should point to your local machine
+host: localhost:10011
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /message:
+    # message controller
+    x-swagger-router-controller: message
+    post:
+      #message info to be stored
+      description: add a new message
+      operationId : newMessage
+      parameters:
+        - name : newMessage
+          description : Message to be stored
+          in : body
+          required : true
+          schema :
+            $ref : "#/definitions/Message"
+      responses:
+        "200" :
+          description : Success
+          schema :
+            $ref : "#/definitions/NewElementAdded"
+        default :
+          description : Error
+          schema:
+            $ref : "#/definitions/ErrorResponse"
+  /allusers:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: user
+    get:
+      description: Returns the list of users in the db
+      # used as the method name of the controller
+      operationId: allusers
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetUserListResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user:
+    x-swagger-router-controller: user
+    get:
+      description: Gets user profile given the username
+      operationId: userprofile
+      parameters:
+        - name: username
+          in: query
+          description: The user profile of the identified user
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetUserProfileResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /allmessages:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: message
+    get:
+      description: Returns the list of messages in the db
+      # used as the method name of the controller
+      operationId: allmessages
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetMessageListResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  GetUserListResponse:
+    required:
+      - users
+    properties:
+      # The array of movies
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            username:
+              type: string
+            email:
+              type: string
+  GetMessageListResponse:
+    required:
+      - messages
+    properties:
+      # The array of movies
+      messages:
+        type: array
+        items:
+          type: object
+          properties:
+            userid:
+              type: string
+            number:
+              type: number
+  GetUserProfileResponse:
+    required:
+      - user
+    properties:
+      # The array of movies
+      user:
+        type: object
+        properties:
+          username:
+            type: string
+          userid:
+            type: string
+          t:
+            type: string
+          lan:
+            type: string
+          email:
+            type: string
+          name:
+            type: object
+            properties:
+              first:
+                type: string
+              last:
+                type: string
+  NewElementAdded:
+    type: object
+    properties:
+      success:
+        type: number
+        description: returns 1 if successful
+      description:
+        type: string
+        description: Message added 
+    required:
+      - success
+      - description
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  Message:
+    type: object
+    properties:
+      userid:
+        type: string
+        description: Userid value
+      mcode:
+        type: string
+        description: Mcode value
+      sensorid:
+        type: string
+        description: The sensor id
+      temporality:
+        type: string
+        description: The temporality, choosen between "timestamp", "datestamp", "timeinterval"
+      temporality_value1:
+        type: string
+        description: The first temporality value
+      temporality_value2:
+        type: string
+        description: The second temporality value
+    required:
+      - userid
+      - mcode
