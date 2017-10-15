@@ -1,10 +1,8 @@
 var mongoose = require('mongoose');
 var dbconfig = require('../config.js');
-//var Time = require('./time.js');
-//var SingleMessageItem = require('./singleMessageItem.js');
 
 var currentDatabase = "/measurements";
-var currentCollection = "/messages";
+var currentCollection = "/calls";
 
 mongoose.Promise = global.Promise;
 
@@ -14,9 +12,33 @@ var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollect
    Create a new mongoose schema and assign it to my schema 
 */
 
-var messageSchema = mongoose.Schema({
+var TimeSchema = new mongoose.Schema({ 
+    temporality : {
+        type : String,
+        //enum : dbconfig.temporality
+    },
+    dt : {
+        type : String
+        // ci vuole un validator
+    }
+});
 
-    // the user id from community
+var CallItemSchema = new mongoose.Schema({ 
+    number : Number,
+    type : {
+        type : String
+    },
+    time : {
+        type : String
+    },
+    duration : {
+        type: Number  
+    }
+});
+
+
+var callSchema = mongoose.Schema({
+
     userid: {
         type: String,
         unique : false,
@@ -34,34 +56,10 @@ var messageSchema = mongoose.Schema({
         unique : false,
         required: [true, 'Sensorid must be provided']
     },
-    time: {
-        temporality : {
-            type : String,
-            //enum : dbconfig.temporality
-        },
-        dt : {
-           type : String
-           // ci vuole un validator
-        } 
-    },
-    data: { 
-        items : [{
-            number : Number,
-                type : {
-            type : String
-                //enum : dbconfig.type
-            },
-            time : {
-                type : String
-            }
-        }]
-    },
-    // Hide __v attribute on query
-    __v: { 
-        type: Number, 
-        select: false
-    }
+    time : TimeSchema,
     
+    data : CallItemSchema
+
 }, {timestamps: true});
 
 // Virtuals: sono metodi (getter e setter) che non hanno modifiche persistenti sul db, ma servono solo a un livello prima per formattare i dati. Ad esempio, data una stringa con name + surname, un virtual method può formattare la stringa e dividerla in due (name e surname) prima di effettuare lo storage sul db.
@@ -82,12 +80,4 @@ messageSchema.statics.findByUserID = function(u, cb) {
   The first argument is the unique collection name;
   The second argument is the schema to be used to create the model
 */
-module.exports = conn.model('Message', messageSchema);
-
-
-	/*"data" : [
-		{   "number" : 1234,
-			"type": "IN",
-			"time": "13:27"
-		}
-	]*/
+module.exports = conn.model('Call', callSchema);

@@ -3,6 +3,8 @@
 var util = require('util');
 var Message = require('../../../db/models/message');
 
+var SingleMessageItem = require('../../../db/models/singleMessageItem');
+
 module.exports = {
   allmessages: getAllmessages,
   newMessage : saveMessage
@@ -10,35 +12,119 @@ module.exports = {
 
 function getAllmessages(req, res) {
   var arr = [];
-    Message.find({}, function(err, messages) {
-        console.log("Message Controller");
-        
+    //Message.find({}, function(err, messages) {
+    Message.find({}, { _id: 0, updatedAt: 0, createdAt: 0 }, function(err, messages) {
         if(err) res.json(err.message);
         
-        for (var i = 0; i < messages.length; i++) {
-            console.log("messaggio trovato");
-            arr[i] = {
-                userid: messages[i].userid,
-                mcode: messages[i].mcode,
-                sensorid: messages[i].sensorid,
-                time: messages[i].time,
-                data: messages[i].data,
-            }
-        }
-        res.json(arr);
+        // res.send(array);
+        res.json(messages);
     });
 }
 
+
 function saveMessage (req, res){
     // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
+    
+    // Calculate time
+    var myTime = {
+        temporality : req.swagger.params.newMessage.value.time.temporality,
+        dt : req.swagger.params.newMessage.value.time.dt
+    };
+    console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
+    
+    var itemsArray = [];
+    // Create data structure
+    var dataLength = req.swagger.params.newMessage.value.data.items.length;
+    
+    for(var i=0; i<dataLength; i++){
+        
+        // Create single data>items instance
+        var messItem = new SingleMessageItem({
+            number : req.swagger.params.newMessage.value.data.items[i].number,
+            type : req.swagger.params.newMessage.value.data.items[i].type,
+            time : req.swagger.params.newMessage.value.data.items[i].time
+        });
+        
+        itemsArray.push(messItem);
+        
+        console.log("Salvato in array: "+itemsArray[i].number+" - "+itemsArray[i].type+" - "+itemsArray[i].time);
+    } 
+    console.log("ITEMS ARRAY vale: "+itemsArray);
+    
+    var myItems = {
+        items : itemsArray
+    }
     var mess = new Message({
         userid : req.swagger.params.newMessage.value.userid,
-        mcode : req.swagger.params.newMessage.value.mcode
+        mcode : req.swagger.params.newMessage.value.mcode,
+        sensorid : req.swagger.params.newMessage.value.sensorid,
+        time : myTime,
+        data : myItems
     });
+    console.log("**** TIME INSERITO VALE: "+mess.time.temporality +" - "+ mess.time.dt)
+    console.log("**** ITEMSss INSERITO VALE: "+mess.data.items[0])
     
-    var messageReceived = util.format('Ricevuto, %s - %s!', mess.userid, mess.mcode);
-    console.log("_*_*_*_*_"+messageReceived);
+    mess.save(function(err, doc){
+        if (err){
+            console.log("---- ERRRR!");
+            res.json({
+                message: err.message
+            });
+        }
+        else{
+            console.log("---- NESSUN ERRRR!");
+            res.json({
+                success: 1,
+                description: "Utente Salvato"
+            });
+        }
+    });
+    console.log(" --> END");
+}
 
+// tutto separato, items e singlemessageitems
+/*function saveMessage (req, res){
+    // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
+    //console.log("%s ++ %s ++ %s", req.swagger.params.newMessage.value.data.items[0].number, req.swagger.params.newMessage.value.data.items[0].type, req.swagger.params.newMessage.value.data.items[0].time);
+    
+    // Calculate time
+    var myTime = {
+        temporality : req.swagger.params.newMessage.value.time.temporality,
+        dt : req.swagger.params.newMessage.value.time.dt
+    };
+    console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
+    
+    var itemsArray = new Items({});
+    // Create data structure
+    var dataLength = req.swagger.params.newMessage.value.data.items.length;
+    console.log("DATA LENGTH vale :"+dataLength);
+    
+    for(var i=0; i<dataLength; i++){
+        
+        // Create single data>items instance
+        var messItem = new SingleMessageItem({
+            number : req.swagger.params.newMessage.value.data.items[i].number,
+            type : req.swagger.params.newMessage.value.data.items[i].type,
+            time : req.swagger.params.newMessage.value.data.items[i].time
+        });
+        
+        itemsArray.items.push(messItem);
+        
+        console.log("Salvato in array: "+itemsArray.items[i].number+" - "+itemsArray.items[i].type+" - "+itemsArray.items[i].time);
+    } 
+    console.log("ITEMS ARRAY vale: "+itemsArray);
+    
+    var mess = new Message({
+        userid : req.swagger.params.newMessage.value.userid,
+        mcode : req.swagger.params.newMessage.value.mcode,
+        sensorid : req.swagger.params.newMessage.value.sensorid,
+        time : myTime,
+        data : itemsArray
+    });
+    console.log("**** TIME INSERITO VALE: "+mess.time.temporality +" - "+ mess.time.dt)
+    console.log("**** ITEMSss INSERITO VALE: "+mess.data.items)
+    console.log("_*_*_*_*_ SONO QUI");
+    
     mess.save(function(err, doc){
         if (err){
             console.log("---- ERRRR!");
@@ -56,4 +142,67 @@ function saveMessage (req, res){
         }
     });
     console.log(" --> END");
-}
+}*/
+
+
+/*function saveMessage (req, res){
+    // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
+    //console.log("%s ++ %s ++ %s", req.swagger.params.newMessage.value.data.items[0].number, req.swagger.params.newMessage.value.data.items[0].type, req.swagger.params.newMessage.value.data.items[0].time);
+    
+    // Calculate time
+    var myTime = {
+        temporality : req.swagger.params.newMessage.value.time.temporality,
+        dt : req.swagger.params.newMessage.value.time.dt
+    };
+    console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
+    
+    var itemsArray = new Items({});
+    // Create data structure
+    var dataLength = req.swagger.params.newMessage.value.data.items.length;
+    console.log("DATA LENGTH vale :"+dataLength);
+    
+    for(var i=0; i<dataLength; i++){
+        
+        // Create single data>items instance
+        var messItem = new SingleMessageItem({
+            number : req.swagger.params.newMessage.value.data.items[i].number,
+            type : req.swagger.params.newMessage.value.data.items[i].type,
+            time : req.swagger.params.newMessage.value.data.items[i].time
+        });
+        
+        itemsArray.items.push(messItem);
+        
+        console.log("Salvato in array: "+itemsArray.items[i].number+" - "+itemsArray.items[i].type+" - "+itemsArray.items[i].time);
+    } 
+    console.log("ITEMS ARRAY vale: "+itemsArray);
+    
+    var mess = new Message({
+        userid : req.swagger.params.newMessage.value.userid,
+        mcode : req.swagger.params.newMessage.value.mcode,
+        sensorid : req.swagger.params.newMessage.value.sensorid,
+        time : myTime,
+        data : itemsArray
+    });
+    console.log("**** TIME INSERITO VALE: "+mess.time.temporality +" - "+ mess.time.dt)
+    console.log("**** ITEMSss INSERITO VALE: "+mess.data.items)
+    console.log("_*_*_*_*_ SONO QUI");
+    
+    mess.save(function(err, doc){
+        if (err){
+            console.log("---- ERRRR!");
+            // questo dà errore
+            res.json({
+                message: err.message
+            });
+        }
+        else{
+            console.log("---- NESSUN ERRRR!");
+            res.json({
+                success: 1,
+                description: "Utente Salvato"
+            });
+        }
+    });
+    console.log(" --> END");
+}*/
+

@@ -179,22 +179,46 @@ definitions:
     properties:
       userid:
         type: string
-        description: Userid value
+        description: User id value
       mcode:
         type: string
         description: Mcode value
       sensorid:
         type: string
         description: The sensor id
-      temporality:
-        type: string
-        description: The temporality, choosen between "timestamp", "datestamp", "timeinterval"
-      temporality_value1:
-        type: string
-        description: The first temporality value
-      temporality_value2:
-        type: string
-        description: The second temporality value
+      time:
+        $ref: '#/definitions/DateValue'
+      data:
+        type: object
+        description: The data object
+        items: 
+          $ref: '#/definitions/ItemsArray'
     required:
       - userid
       - mcode
+  DateValue:
+    type: object
+    properties:
+      temporality:
+        type: string
+        description: The temporality, choosen between datestamp, timestamp and timeinterval
+      dt:
+        type: string
+        description: The datestamp value
+  ItemsArray:
+    type: array
+    description: Items array
+    items: 
+      $ref: '#/definitions/SingleMessageItem'
+  SingleMessageItem:
+    type: object
+    properties:
+      number: 
+        type: number
+        description: The number of the other person
+      type:
+        type: string
+        description: The type of message, choosen between IN or OUT
+      time:
+        type: string
+        description: The time at which the message is received or sent
