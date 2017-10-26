@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');    
-var dbconfig = require('../config.js');
+var dbconfig = require('../../config.js');
 var SingleMessageItem = require('./singleMessageItem.js');
+var Schema = mongoose.Schema;
 
-var ItemsSchema = new mongoose.Schema({
+var ItemsSchema = new Schema({
     items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SingleMessageItem' }]
 });
 

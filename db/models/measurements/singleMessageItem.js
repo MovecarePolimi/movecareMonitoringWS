@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');    
-var dbconfig = require('../config.js');
+var dbconfig = require('../../config.js');
+var Schema = mongoose.Schema;
 
-var MessageItemSchema = new mongoose.Schema({ 
+var MessageItemSchema = new Schema({ 
     number : Number,
     type : {
         type : String
