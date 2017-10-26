@@ -4,6 +4,7 @@ info:
   title: Movecare Users API
 # during dev, should point to your local machine
 host: localhost:10011
+#host: 54.93.97.25:10011
 # basePath prefixes all resource paths 
 basePath: /
 # 
@@ -40,47 +41,8 @@ paths:
         default :
           description : Error
           schema:
-            $ref : "#/definitions/ErrorResponse"
-  /allusers:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: user
-    get:
-      description: Returns the list of users in the db
-      # used as the method name of the controller
-      operationId: allusers
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetUserListResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /user:
-    x-swagger-router-controller: user
-    get:
-      description: Gets user profile given the username
-      operationId: userprofile
-      parameters:
-        - name: username
-          in: query
-          description: The user profile of the identified user
-          required: true
-          type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetUserProfileResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref : "#/definitions/ErrorResponsePost"
+            
   /allmessages:
     # binds a127 app logic to a route
     x-swagger-router-controller: message
@@ -99,24 +61,141 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+            
+  /allcalls:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: call
+    get:
+      description: Returns the list of calls in the db
+      # used as the method name of the controller
+      operationId: allCalls
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetCallListResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /call:
+    # call controller
+    x-swagger-router-controller: call
+    post:
+      #message info to be stored
+      description: add a new call
+      operationId : newCall
+      parameters:
+        - name : newCall
+          description : Call to be stored
+          in : body
+          required : true
+          schema :
+            $ref : "#/definitions/Call"
+      responses:
+        "200" :
+          description : Success
+          schema :
+            $ref : "#/definitions/NewElementAdded"
+        default :
+          description : Error
+          schema:
+            $ref : "#/definitions/ErrorResponsePost"
+            
+  /allsmartphoneuse:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: smartphoneUse
+    get:
+      description: Returns the list of smartphoneUse in the db
+      # used as the method name of the controller
+      operationId: allsmartphoneuse
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetSmartphoneUseListResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /smartphoneuse:
+    # smartphoneuse controller
+    x-swagger-router-controller: smartphoneUse
+    post:
+      #message info to be stored
+      description: add a new SmartphoneUse
+      operationId : newSmartphoneUse
+      parameters:
+        - name : newSmartphoneUse
+          description : SmartphoneUse to be stored
+          in : body
+          required : true
+          schema :
+            $ref : "#/definitions/SmartphoneUse"
+      responses:
+        "200" :
+          description : Success
+          schema :
+            $ref : "#/definitions/NewElementAdded"
+        default :
+          description : Error
+          schema:
+            $ref : "#/definitions/ErrorResponsePost"
+  
+  /allpeopleuse:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: peopleUse
+    get:
+      description: Returns the list of peopleUse in the db
+      # used as the method name of the controller
+      operationId: allpeopleuse
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetPeopleUseListResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /peopleuse:
+    # message controller
+    x-swagger-router-controller: peopleUse
+    post:
+      #message info to be stored
+      description: add a new PeopleUse
+      operationId : newPeopleUse
+      parameters:
+        - name : newPeopleUse
+          description : PeopleUse to be stored
+          in : body
+          required : true
+          schema :
+            $ref : "#/definitions/PeopleUse"
+      responses:
+        "200" :
+          description : Success
+          schema :
+            $ref : "#/definitions/NewElementAdded"
+        default :
+          description : Error
+          schema:
+            $ref : "#/definitions/ErrorResponsePost"
+            
   /swagger:
     x-swagger-pipe: swagger_raw
+    
 # complex objects have schema definitions
 definitions:
-  GetUserListResponse:
-    required:
-      - users
-    properties:
-      # The array of movies
-      users:
-        type: array
-        items:
-          type: object
-          properties:
-            username:
-              type: string
-            email:
-              type: string
   GetMessageListResponse:
     required:
       - messages
@@ -131,49 +210,80 @@ definitions:
               type: string
             number:
               type: number
-  GetUserProfileResponse:
+  GetCallListResponse:
     required:
-      - user
+      - calls
     properties:
       # The array of movies
-      user:
-        type: object
-        properties:
-          username:
-            type: string
-          userid:
-            type: string
-          t:
-            type: string
-          lan:
-            type: string
-          email:
-            type: string
-          name:
-            type: object
-            properties:
-              first:
-                type: string
-              last:
-                type: string
+      calls:
+        type: array
+        items:
+          type: object
+          properties:
+            userid:
+              type: string
+            number:
+              type: number
+              
+  GetSmartphoneUseListResponse:
+    required:
+      - smartphoneUses
+    properties:
+      # The array of movies
+      smartphoneUses:
+        type: array
+        items:
+          type: object
+          properties:
+            userid:
+              type: string
+            icode:
+              type: string
+  
+  GetPeopleUseListResponse:
+    required:
+      - peopleUses
+    properties:
+      # The array of movies
+      peopleUses:
+        type: array
+        items:
+          type: object
+          properties:
+            userid:
+              type: string
+            icode:
+              type: string
+              
   NewElementAdded:
     type: object
     properties:
       success:
-        type: number
-        description: returns 1 if successful
-      description:
-        type: string
-        description: Message added 
+        type: boolean
+        description: returns true if successful
     required:
       - success
-      - description
+      
+  ErrorResponsePost:
+    type: object
+    properties:
+      success:
+        type: boolean
+        description: returns false if successful
+      error:
+        type: string
+        description: message error description
+    required:
+      - success
+      - error
+      
   ErrorResponse:
     required:
       - message
     properties:
       message:
         type: string
+        
   Message:
     type: object
     properties:
@@ -192,10 +302,74 @@ definitions:
         type: object
         description: The data object
         items: 
-          $ref: '#/definitions/ItemsArray'
+          $ref: '#/definitions/ItemsMessageArray'
     required:
       - userid
       - mcode
+      
+  Call:
+    type: object
+    properties:
+      userid:
+        type: string
+        description: User id value
+      mcode:
+        type: string
+        description: Mcode value
+      sensorid:
+        type: string
+        description: The sensor id
+      time:
+        $ref: '#/definitions/DateValue'
+      data:
+        type: object
+        description: The data object
+        items: 
+          $ref: '#/definitions/ItemsCallArray'
+    required:
+      - userid
+      - mcode
+  
+  SmartphoneUse:
+    type: object
+    properties:
+      userid:
+        type: string
+        description: User id value
+      icode:
+        type: string
+        description: Icode value
+      time:
+        $ref: '#/definitions/DateValue'
+      data:
+        type: object
+        description: The data object
+        items: 
+          $ref: '#/definitions/ItemsSmartphoneUseArray'
+    required:
+      - userid
+      - icode
+  
+  PeopleUse:
+    type: object
+    properties:
+      userid:
+        type: string
+        description: User id value
+      icode:
+        type: string
+        description: Icode value
+      time:
+        $ref: '#/definitions/DateValue'
+      data:
+        type: object
+        description: The data object
+        items: 
+          $ref: '#/definitions/ItemsPeopleUseArray'
+    required:
+      - userid
+      - icode
+      
   DateValue:
     type: object
     properties:
@@ -205,20 +379,89 @@ definitions:
       dt:
         type: string
         description: The datestamp value
-  ItemsArray:
+        
+  ItemsMessageArray:
     type: array
     description: Items array
     items: 
       $ref: '#/definitions/SingleMessageItem'
+  
+  ItemsCallArray:
+    type: array
+    description: Items array
+    items: 
+      $ref: '#/definitions/SingleCallItem'
+  
+  ItemsSmartphoneUseArray:
+    type: array
+    description: Items array
+    items: 
+      $ref: '#/definitions/SingleSmartphoneUseItem'
+      
+  ItemsPeopleUseArray:
+    type: array
+    description: Items array
+    items: 
+      $ref: '#/definitions/SinglePeopleUseItem'
+      
   SingleMessageItem:
     type: object
     properties:
       number: 
         type: number
-        description: The number of the other person
+        description: The sender or recipient number
       type:
         type: string
         description: The type of message, choosen between IN or OUT
       time:
         type: string
         description: The time at which the message is received or sent
+  
+  SingleCallItem:
+    type: object
+    properties:
+      number: 
+        type: number
+        description: The caller or recipient number
+      duration:
+        type: number
+        description: The call duration
+      type:
+        type: string
+        description: The type of call, choosen between IN or OUT
+      time:
+        type: string
+        description: The time at which the call is received or sent
+  
+  SingleSmartphoneUseItem:
+    type: object
+    properties:
+      name: 
+        type: string
+        description: The name of the indicator
+      value:
+        type: number
+        description: The value of the indicator
+      units:
+        type: string
+        description: The units of the value, in this case choosen between SECONDS or INTEGER (in this case)
+        
+  SinglePeopleUseItem:
+    type: object
+    properties:
+      log: 
+        type: string
+        description: The log of the item, choosen between M or C (message or call)
+      number:
+        type: number
+        description: The last four digits of caller/recipient or sender/recipient number
+      total:
+        type: number
+        description: The total number of call or messages made by this person
+      type:
+        type: string
+        description: The type of call or message, choosen between IN or OUT
+      duration:
+        type: string
+        description: The duration of the call (valid only for call elements)
+

@@ -1,9 +1,9 @@
 'use strict';
 
 var util = require('util');
-var Message = require('../../../db/models/message');
+var Message = require('../../../db/models/measurements/message');
 
-var SingleMessageItem = require('../../../db/models/singleMessageItem');
+var SingleMessageItem = require('../../../db/models/measurements/singleMessageItem');
 
 module.exports = {
   allmessages: getAllmessages,
@@ -11,12 +11,18 @@ module.exports = {
 };
 
 function getAllmessages(req, res) {
-  var arr = [];
-    //Message.find({}, function(err, messages) {
+
+    /*Message
+        .find({}, { _id: 0, updatedAt: 0, createdAt: 0 })
+        .populate("data.items")
+        .exec(function (err, messages) {
+            if(err) res.json(err.message);
+            
+            res.json(messages);
+        });*/
     Message.find({}, { _id: 0, updatedAt: 0, createdAt: 0 }, function(err, messages) {
         if(err) res.json(err.message);
         
-        // res.send(array);
         res.json(messages);
     });
 }
@@ -30,7 +36,7 @@ function saveMessage (req, res){
         temporality : req.swagger.params.newMessage.value.time.temporality,
         dt : req.swagger.params.newMessage.value.time.dt
     };
-    console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
+    //console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
     
     var itemsArray = [];
     // Create data structure
@@ -47,9 +53,9 @@ function saveMessage (req, res){
         
         itemsArray.push(messItem);
         
-        console.log("Salvato in array: "+itemsArray[i].number+" - "+itemsArray[i].type+" - "+itemsArray[i].time);
+        //console.log("Salvato in array: "+itemsArray[i].number+" - "+itemsArray[i].type+" - "+itemsArray[i].time);
     } 
-    console.log("ITEMS ARRAY vale: "+itemsArray);
+    //console.log("ITEMS ARRAY vale: "+itemsArray);
     
     var myItems = {
         items : itemsArray
@@ -61,22 +67,27 @@ function saveMessage (req, res){
         time : myTime,
         data : myItems
     });
-    console.log("**** TIME INSERITO VALE: "+mess.time.temporality +" - "+ mess.time.dt)
-    console.log("**** ITEMSss INSERITO VALE: "+mess.data.items[0])
+    //console.log("**** TIME INSERITO VALE: "+mess.time.temporality +" - "+ mess.time.dt)
+    //console.log("**** ITEMSss INSERITO VALE: "+mess.data.items[0])
     
     mess.save(function(err, doc){
         if (err){
             console.log("---- ERRRR!");
             res.json({
-                message: err.message
+                success:false,
+                error: err.message
             });
+            /*res.json({
+                message: err.message
+            });*/
         }
         else{
-            console.log("---- NESSUN ERRRR!");
-            res.json({
+            console.log("MESSAGE stored");
+            res.json({success:true});
+            /*res.json({
                 success: 1,
                 description: "Utente Salvato"
-            });
+            });*/
         }
     });
     console.log(" --> END");
