@@ -1,58 +1,35 @@
 var mongoose = require('mongoose');
 var dbconfig = require('../../config.js');
 var Schema = mongoose.Schema;
+var valFunction = require("../validationFunction.js");
 
-var currentDatabase = "/measurements";
-var currentCollection = "/calls";
+var currentDatabase = dbconfig.measurements;
+var currentCollection = dbconfig.SUC;    // calls
 
 mongoose.Promise = global.Promise;
 
 var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
 
-function datestampValidator (val) {
-    var dtSplitted =  val.split("-");
-    if(dtSplitted.length != 3 || dtSplitted[0].length != 4 || dtSplitted[1].length != 2 || dtSplitted[2].length != 2){
-        return false;
-    }
-    return !(isNaN(dtSplitted[0]) || isNaN(dtSplitted[1]));
-}
 
-function itemsTimeValidator (val) {
-    var timeSplitted =  val.split(":");
-    if(timeSplitted.length != 2 || timeSplitted[0].length != 2 || timeSplitted[1].length != 2){
-        return false;
-    }
-    return (/^\d+$/.test(timeSplitted[0]) && /^\d+$/.test(timeSplitted[1]))
-}
+var datestampVal = [valFunction.datestampValidator, 
+                    "Path '{PATH}' ('{VALUE}'): the datestamp format must be '2017-09-27'"
+                   ];
 
-function itemsNumberValidator (val) {
-    /*console.log(""+val); // Problemi con lo 0 iniziale
-    if(!/^\d+$/.test(val)){
-        console.log("Formato non intero/numerico");
-        return false;
-    }
-    if(val.length != 4){
-        console.log("Numero deve essere di 4 cifre");
-        return false;
-    }
-    console.log("Allora è accettato");
-    return true;*/
-    return true;
-}
+var codeVal = [valFunction.codeValidator, 
+               "Path '{PATH}' ('{VALUE}'): the code must be composed by exactly 3 letters, such as 'SSU'"
+              ];
 
-function itemsDurationValidator (val) {
-    if(!/^\d+$/.test(val)){
-        console.log("Formato non intero/numerico");
-        return false;
-    }
-    return true;
-}
+var itemsTimeVal = [valFunction.itemsTimeValidator, 
+                    "Path '{PATH}' ('{VALUE}'): the time format must be '12:05'"
+                   ];
 
+var itemsNumberVal = [valFunction.itemsNumberValidator, 
+                      "Path '{PATH}' ('{VALUE}'): the number format must be the last fourth digits, for instance '8875'"
+                     ];
 
-var datestampVal = [datestampValidator, "Path '{PATH}' ('{VALUE}'): the datestamp format must be '2017-09-27'"];
-var itemsTimeVal = [itemsTimeValidator, "Path '{PATH}' ('{VALUE}'): the time format must be '12:05'"];
-var itemsNumberVal = [itemsNumberValidator, "Path '{PATH}' ('{VALUE}'): the number format must be the last fourth digits, for instance '8875'"];
-var itemsDurationVal = [itemsDurationValidator, "Path '{PATH}' ('{VALUE}'): the duration must be numeric (seconds)"]; 
+var itemsDurationVal = [valFunction.itemsDurationValidator, 
+                        "Path '{PATH}' ('{VALUE}'): the duration must be numeric (seconds)"
+                       ]; 
 
 /* Create a new mongoose schema and assign it to my schema */
 
@@ -71,8 +48,10 @@ var callSchema = Schema({
         type: String,
         unique : false,
         required: [true, 'Measurement Code must be provided'],
+        uppercase: true,
         maxlength: 3, 
-        uppercase: true
+        minlength: 3,
+        validate: codeVal   // validate format 'SUM'
     },
     sensorid: {
         type: String,
@@ -89,6 +68,7 @@ var callSchema = Schema({
         dt : {
             type : String,
             maxlength: 10,
+            minlength: 10,
             validate: datestampVal   // validate format '2017-09-27'
         } 
     },
@@ -96,7 +76,6 @@ var callSchema = Schema({
         items : [{
             number : {
                 type: String,
-                maxlength: 4,
                 validate: itemsNumberVal   // last fourth number digits
             },
             duration:{
@@ -122,19 +101,6 @@ var callSchema = Schema({
     }
     
 }, {timestamps: true});
-
-// Virtuals: sono metodi (getter e setter) che non hanno modifiche persistenti sul db, ma servono solo a un livello prima per formattare i dati. Ad esempio, data una stringa con name + surname, un virtual method può formattare la stringa e dividerla in due (name e surname) prima di effettuare lo storage sul db.
-
-// Statics:
-// Statics
-/*messageSchema.statics.findByUsername = function(u, cb) {
-    return this.find({ username: u }, cb);
-};
-
-messageSchema.statics.findByUserID = function(u, cb) {
-    return this.find({ userid: u }, cb);
-};*/
-
 
 /* 
   Compile to a model
