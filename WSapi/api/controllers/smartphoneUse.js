@@ -56,14 +56,14 @@ function saveSmartphoneUse (req, res){
     
     smartphoneUse.save(function(err, doc){
         if (err){
-            console.log("---- ERRRR!");
+            console.log("---> ERROR <--- !");
             res.json({
                 success:false,
                 error: err.message
             });
         }
         else{
-            console.log("MESSAGE stored");
+            console.log("SMARTPHONE_USE stored");
             res.json({success:true});
         }
     });

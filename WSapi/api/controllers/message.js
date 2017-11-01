@@ -20,7 +20,7 @@ function getAllmessages(req, res) {
             
             res.json(messages);
         });*/
-    Message.find({}, { _id: 0, updatedAt: 0, createdAt: 0 }, function(err, messages) {
+    Message.find({}, { updatedAt:0, createdAt:0, _id:0, __v:0 }, function(err, messages) {
         if(err) res.json(err.message);
         
         res.json(messages);
@@ -72,22 +72,15 @@ function saveMessage (req, res){
     
     mess.save(function(err, doc){
         if (err){
-            console.log("---- ERRRR!");
+            console.log("---> ERROR <--- !");
             res.json({
                 success:false,
                 error: err.message
             });
-            /*res.json({
-                message: err.message
-            });*/
         }
         else{
             console.log("MESSAGE stored");
             res.json({success:true});
-            /*res.json({
-                success: 1,
-                description: "Utente Salvato"
-            });*/
         }
     });
     console.log(" --> END");

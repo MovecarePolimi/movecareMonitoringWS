@@ -58,14 +58,14 @@ function savePeopleUse (req, res){
     
     peopleUse.save(function(err, doc){
         if (err){
-            console.log("---- ERRRR!");
+            console.log("---> ERROR <--- !");
             res.json({
                 success:false,
                 error: err.message
             });
         }
         else{
-            console.log("MESSAGE stored");
+            console.log("PEOPLE_USE stored");
             res.json({success:true});
         }
     });

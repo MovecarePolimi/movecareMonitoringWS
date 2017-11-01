@@ -64,7 +64,7 @@ function saveCall (req, res){
     
     call.save(function(err, doc){
         if (err){
-            console.log("---- ERRRR!");
+            console.log("---> ERROR <--- !");
             res.json({
                 success:false,
                 error: err.message
