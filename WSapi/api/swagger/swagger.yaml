@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: Movecare Users API
 # during dev, should point to your local machine
-host: localhost:10011
+host: 54.93.97.25:10011
 #host: 54.93.97.25:10011
 # basePath prefixes all resource paths 
 basePath: /
