@@ -5,6 +5,8 @@ var Call = require('../../../db/models/measurements/call');
 
 var SingleCallItem = require('../../../db/models/measurements/singleCallItem');
 
+var commonFunctions = require("./commonFunctions");
+
 module.exports = {
   allCalls: getAllcalls,
   newCall : saveCall
@@ -31,6 +33,21 @@ function saveCall (req, res){
     
     var itemsArray = [];
     // Create data structure
+    var dataField = req.swagger.params.newCall.value.data;
+
+    if(dataField == null){
+        console.log("**** DATA FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    var itemsField = req.swagger.params.newCall.value.data.items;
+    if(itemsField == null){
+        console.log("**** ITEMS FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
     var dataLength = req.swagger.params.newCall.value.data.items.length;
     
     for(var i=0; i<dataLength; i++){
@@ -77,6 +94,5 @@ function saveCall (req, res){
     });
     console.log(" --> END");
 }
-
 
 

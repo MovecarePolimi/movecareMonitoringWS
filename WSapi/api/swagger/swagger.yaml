@@ -1,10 +1,12 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
-  title: Movecare Users API
+  version: "1.0.0"
+  title: Movecare Monitoring API
+  description:
+    Store user data from smartphone
 # during dev, should point to your local machine
-host: 54.93.97.25:10011
 #host: 54.93.97.25:10011
+host: localhost:10011
 # basePath prefixes all resource paths 
 basePath: /
 # 
@@ -12,6 +14,14 @@ schemes:
   # tip: remove http to make production-grade
   - http
   - https
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+security:
+  - bearerAuth: []         # use the same name as above
+
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
@@ -38,6 +48,8 @@ paths:
           description : Success
           schema :
             $ref : "#/definitions/NewElementAdded"
+        '401':
+          description: 'You do not have necessary permissions for the resource'
         default :
           description : Error
           schema:
@@ -56,6 +68,10 @@ paths:
           schema:
             # a pointer to a definition
             $ref: "#/definitions/GetMessageListResponse"
+        "403":
+          description: Unauthorized request
+          schema:
+            $ref: "#/definitions/UnauthorizedErrorResponse"
         # responses may fall through to errors
         default:
           description: Error
@@ -193,7 +209,8 @@ paths:
             
   /swagger:
     x-swagger-pipe: swagger_raw
-    
+
+
 # complex objects have schema definitions
 definitions:
   GetMessageListResponse:
@@ -278,6 +295,13 @@ definitions:
       - error
       
   ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+
+  UnauthorizedErrorResponse:
     required:
       - message
     properties:

@@ -5,6 +5,8 @@ var PeopleUse = require('../../../db/models/indicators/peopleUse');
 
 var SinglePeopleItem = require('../../../db/models/indicators/singlePeopleItem');
 
+var commonFunctions = require("./commonFunctions");
+
 module.exports = {
   allpeopleuse: getAllPeopleUse,
   newPeopleUse : savePeopleUse
@@ -19,7 +21,6 @@ function getAllPeopleUse(req, res) {
     });
 }
 
-
 function savePeopleUse (req, res){
     // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
     
@@ -31,6 +32,21 @@ function savePeopleUse (req, res){
     
     var itemsArray = [];
     // Create data structure
+    var dataField = req.swagger.params.newPeopleUse.value.data;
+
+    if(dataField == null){
+        console.log("**** DATA FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    var itemsField = req.swagger.params.newPeopleUse.value.data.items;
+    if(itemsField == null){
+        console.log("**** ITEMS FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
     var dataLength = req.swagger.params.newPeopleUse.value.data.items.length; 
     for(var i=0; i<dataLength; i++){
         

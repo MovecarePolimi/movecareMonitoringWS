@@ -5,6 +5,8 @@ var Message = require('../../../db/models/measurements/message');
 
 var SingleMessageItem = require('../../../db/models/measurements/singleMessageItem');
 
+var commonFunctions = require("./commonFunctions");
+
 module.exports = {
   allmessages: getAllmessages,
   newMessage : saveMessage
@@ -36,23 +38,38 @@ function saveMessage (req, res){
         temporality : req.swagger.params.newMessage.value.time.temporality,
         dt : req.swagger.params.newMessage.value.time.dt
     };
-    //console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
+    console.log("**** TIME CREATO VALE: "+myTime.temporality +" - "+ myTime.dt)
     
     var itemsArray = [];
     // Create data structure
+    var dataField = req.swagger.params.newMessage.value.data;
+
+    if(dataField == null){
+        console.log("**** DATA FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    var itemsField = req.swagger.params.newMessage.value.data.items;
+    if(itemsField == null){
+        console.log("**** ITEMS FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        //sendResponse(res, "Null object received");
+        return;
+    }
+
     var dataLength = req.swagger.params.newMessage.value.data.items.length;
     
     for(var i=0; i<dataLength; i++){
-        
         // Create single data>items instance
         var messItem = new SingleMessageItem({
             number : req.swagger.params.newMessage.value.data.items[i].number,
             type : req.swagger.params.newMessage.value.data.items[i].type,
             time : req.swagger.params.newMessage.value.data.items[i].time
         });
-        
+
         itemsArray.push(messItem);
-        
+
         //console.log("Salvato in array: "+itemsArray[i].number+" - "+itemsArray[i].type+" - "+itemsArray[i].time);
     } 
     //console.log("ITEMS ARRAY vale: "+itemsArray);
@@ -70,6 +87,7 @@ function saveMessage (req, res){
     //console.log("**** TIME INSERITO VALE: "+mess.time.temporality +" - "+ mess.time.dt)
     //console.log("**** ITEMSss INSERITO VALE: "+mess.data.items[0])
     
+
     mess.save(function(err, doc){
         if (err){
             console.log("---> ERROR <--- !");
@@ -83,6 +101,7 @@ function saveMessage (req, res){
             res.json({success:true});
         }
     });
+
     console.log(" --> END");
 }
 

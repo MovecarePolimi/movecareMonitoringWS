@@ -5,6 +5,8 @@ var SmartphoneUse = require('../../../db/models/indicators/smartphoneUse');
 
 var SingleSmartphoneItem = require('../../../db/models/indicators/singleSmartphoneItem');
 
+var commonFunctions = require("./commonFunctions");
+
 module.exports = {
   allsmartphoneuse: getAllSmartphoneUse,
   newSmartphoneUse : saveSmartphoneUse
@@ -31,6 +33,21 @@ function saveSmartphoneUse (req, res){
     
     var itemsArray = [];
     // Create data structure
+    var dataField = req.swagger.params.newSmartphoneUse.value.data;
+
+    if(dataField == null){
+        console.log("**** DATA FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    var itemsField = req.swagger.params.newSmartphoneUse.value.data.items;
+    if(itemsField == null){
+        console.log("**** ITEMS FIELD IS NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
     var dataLength = req.swagger.params.newSmartphoneUse.value.data.items.length; 
     for(var i=0; i<dataLength; i++){
         
