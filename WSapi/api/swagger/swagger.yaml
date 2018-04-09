@@ -8,19 +8,19 @@ info:
 #host: 54.93.97.25:10011
 host: localhost:10011
 # basePath prefixes all resource paths 
-basePath: /
+basePath: /smartphone
 # 
 schemes:
   # tip: remove http to make production-grade
   - http
   - https
-securityDefinitions:
-  bearerAuth:
-    type: apiKey
-    name: Authorization
-    in: header
-security:
-  - bearerAuth: []         # use the same name as above
+#securityDefinitions:
+#  bearerAuth:
+#    type: apiKey
+#    name: Authorization
+#    in: header
+#security:
+#  - bearerAuth: []         # use the same name as above
 
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -49,7 +49,7 @@ paths:
           schema :
             $ref : "#/definitions/NewElementAdded"
         '401':
-          description: 'You do not have necessary permissions for the resource'
+          description: You do not have necessary permissions for the resource
         default :
           description : Error
           schema:
@@ -70,8 +70,8 @@ paths:
             $ref: "#/definitions/GetMessageListResponse"
         "403":
           description: Unauthorized request
-          schema:
-            $ref: "#/definitions/UnauthorizedErrorResponse"
+          #schema:
+          #  $ref: "#/definitions/UnauthorizedErrorResponse"
         # responses may fall through to errors
         default:
           description: Error
