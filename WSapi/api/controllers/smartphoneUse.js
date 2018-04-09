@@ -8,11 +8,12 @@ var SingleSmartphoneItem = require('../../../db/models/indicators/singleSmartpho
 var commonFunctions = require("./commonFunctions");
 
 module.exports = {
-  allsmartphoneuse: getAllSmartphoneUse,
+  allsmartphonesuse: getAllSmartphoneUses,
+  smartphoneUsesByUserID: getSmartphoneUsesByUserID,
   newSmartphoneUse : saveSmartphoneUse
 };
 
-function getAllSmartphoneUse(req, res) {
+function getAllSmartphoneUses(req, res) {
     
     SmartphoneUse.find({}, { _id: 0, updatedAt: 0, createdAt: 0 }, function(err, smartphoneUse) {
         if(err) res.json(err.message);
@@ -21,6 +22,25 @@ function getAllSmartphoneUse(req, res) {
     });
 }
 
+function getSmartphoneUsesByUserID(req, res) {
+
+    var userID = req.swagger.params.userID.value;
+    console.log("SmartphoneUse : userID is "+userID);
+
+    if(userID == null || userID.size == 0){
+        console.log("SmartphoneUse: userID is NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    SmartphoneUse.find({"userid" : userID.toString()}, { updatedAt:0, createdAt:0, _id:0, __v:0 },
+                 function(err, smartphoneUse) {
+                    if(err) res.json(err.message);
+
+                    console.log("*** FOUND: "+smartphoneUse.toString());
+                    res.json(smartphoneUse);
+    });
+}
 
 function saveSmartphoneUse (req, res){
     // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}

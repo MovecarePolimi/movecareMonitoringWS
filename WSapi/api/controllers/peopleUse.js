@@ -8,16 +8,37 @@ var SinglePeopleItem = require('../../../db/models/indicators/singlePeopleItem')
 var commonFunctions = require("./commonFunctions");
 
 module.exports = {
-  allpeopleuse: getAllPeopleUse,
+  allpeopleuses: getAllPeopleUses,
+  peopleUsesByUserID: getPeopleUsesByUserID,
   newPeopleUse : savePeopleUse
 };
 
-function getAllPeopleUse(req, res) {
+function getAllPeopleUses(req, res) {
     
     PeopleUse.find({}, { _id: 0, updatedAt: 0, createdAt: 0 }, function(err, peopleUse) {
         if(err) res.json(err.message);
         
         res.json(peopleUse);
+    });
+}
+
+function getPeopleUsesByUserID(req, res) {
+
+    var userID = req.swagger.params.userID.value;
+    console.log("PeopleUse : userID is "+userID);
+
+    if(userID == null || userID.size == 0){
+        console.log("PeopleUse: userID is NULL ****");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    PeopleUse.find({"userid" : userID.toString()}, { updatedAt:0, createdAt:0, _id:0, __v:0 },
+                 function(err, peopleUse) {
+                    if(err) res.json(err.message);
+
+                    console.log("*** FOUND: "+peopleUse.toString());
+                    res.json(peopleUse);
     });
 }
 

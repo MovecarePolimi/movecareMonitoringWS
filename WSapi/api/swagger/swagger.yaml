@@ -30,8 +30,7 @@ produces:
   - application/json
 paths:
   /message:
-    # message controller
-    x-swagger-router-controller: message
+    x-swagger-router-controller: message # the name of the message controller
     post:
       #message info to be stored
       description: add a new message
@@ -56,8 +55,7 @@ paths:
             $ref : "#/definitions/ErrorResponsePost"
             
   /allmessages:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: message
+    x-swagger-router-controller: message # the name of the message controller
     get:
       description: Returns the list of messages in the db
       # used as the method name of the controller
@@ -77,7 +75,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-            
+
+  /messagesByUserID:
+    x-swagger-router-controller: message # the name of the message controller
+    get:
+      description: Returns the list of messages by user in the db
+      # used as the method name of the controller
+      operationId: messageByUserID
+      parameters:
+        - name : userID
+          description : the user ID
+          in : query
+          required : true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetMessageListResponse"
+        "403":
+          description: Unauthorized request
+          #schema:
+          #  $ref: "#/definitions/UnauthorizedErrorResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /allcalls:
     # binds a127 app logic to a route
     x-swagger-router-controller: call
@@ -120,12 +145,40 @@ paths:
           description : Error
           schema:
             $ref : "#/definitions/ErrorResponsePost"
+
+  /callsByUserID:
+    x-swagger-router-controller: call # the name of the message controller
+    get:
+      description: Returns the list of calls by user in the db
+      # used as the method name of the controller
+      operationId: callsByUserID
+      parameters:
+        - name : userID
+          description : the user ID
+          in : query
+          required : true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetCallListResponse"
+        "403":
+          description: Unauthorized request
+          #schema:
+          #  $ref: "#/definitions/UnauthorizedErrorResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
             
-  /allsmartphoneuse:
+  /allsmartphoneuses:
     # binds a127 app logic to a route
     x-swagger-router-controller: smartphoneUse
     get:
-      description: Returns the list of smartphoneUse in the db
+      description: Returns the list of smartphoneUses in the db
       # used as the method name of the controller
       operationId: allsmartphoneuse
       responses:
@@ -164,11 +217,39 @@ paths:
           schema:
             $ref : "#/definitions/ErrorResponsePost"
   
-  /allpeopleuse:
+  /smartphoneUsesByUserID:
+    x-swagger-router-controller: smartphoneUse # the name of the message controller
+    get:
+      description: Returns the list of smartphoneUses by user in the db
+      # used as the method name of the controller
+      operationId: smartphoneUsesByUserID
+      parameters:
+        - name : userID
+          description : the user ID
+          in : query
+          required : true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetSmartphoneUseListResponse"
+        "403":
+          description: Unauthorized request
+          #schema:
+          #  $ref: "#/definitions/UnauthorizedErrorResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /allpeopleuses:
     # binds a127 app logic to a route
     x-swagger-router-controller: peopleUse
     get:
-      description: Returns the list of peopleUse in the db
+      description: Returns the list of peopleUses in the db
       # used as the method name of the controller
       operationId: allpeopleuse
       responses:
@@ -206,7 +287,34 @@ paths:
           description : Error
           schema:
             $ref : "#/definitions/ErrorResponsePost"
-            
+
+  /peopleUsesByUserID:
+    x-swagger-router-controller: peopleUse # the name of the message controller
+    get:
+      description: Returns the list of peopleUses by user in the db
+      # used as the method name of the controller
+      operationId: peopleUsesByUserID
+      parameters:
+        - name : userID
+          description : the user ID
+          in : query
+          required : true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetPeopleUseListResponse"
+        "403":
+          description: Unauthorized request
+          #schema:
+          #  $ref: "#/definitions/UnauthorizedErrorResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 

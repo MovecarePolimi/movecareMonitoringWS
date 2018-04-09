@@ -9,6 +9,7 @@ var commonFunctions = require("./commonFunctions");
 
 module.exports = {
   allmessages: getAllmessages,
+  messagesByUserID: getMessagesByUserID,
   newMessage : saveMessage
 };
 
@@ -26,6 +27,26 @@ function getAllmessages(req, res) {
         if(err) res.json(err.message);
         
         res.json(messages);
+    });
+}
+
+function getMessagesByUserID(req, res) {
+
+    var userID = req.swagger.params.userID.value;
+    console.log("Message : userID is "+userID);
+
+    if(userID == null || userID.size == 0){
+        console.log("Message : userID is NULL");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    Message.find({"userid" : userID.toString()}, { updatedAt:0, createdAt:0, _id:0, __v:0 },
+                 function(err, messages) {
+                    if(err) res.json(err.message);
+
+                    console.log("*** FOUND: "+messages.toString());
+                    res.json(messages);
     });
 }
 

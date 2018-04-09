@@ -8,8 +8,8 @@ var currentCollection = dbconfig.SUC;    // calls
 
 mongoose.Promise = global.Promise;
 
-console.log("************ CALL --> "+dbconfig.url+currentDatabase);
-var conn = mongoose.createConnection(dbconfig.url+currentDatabase);
+console.log("************ CALL --> "+dbconfig.url+currentDatabase+currentCollection);
+var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
 
 
 

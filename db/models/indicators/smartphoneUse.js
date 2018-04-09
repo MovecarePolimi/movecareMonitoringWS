@@ -9,8 +9,8 @@ var currentCollection = dbconfig.SSU;  // smartphoneUse";
 
 mongoose.Promise = global.Promise;
 
-console.log("************ SMARTPHONE_USE --> "+dbconfig.url+currentDatabase);
-var conn = mongoose.createConnection(dbconfig.url+currentDatabase);
+console.log("************ SMARTPHONE_USE --> "+dbconfig.url+currentDatabase+currentCollection);
+var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
 
 var datestampVal = [valFunction.datestampValidator, 
                     "Path '{PATH}' ('{VALUE}'): the datestamp format must be '2017-09-27'"

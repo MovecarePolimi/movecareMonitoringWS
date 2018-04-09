@@ -9,6 +9,7 @@ var commonFunctions = require("./commonFunctions");
 
 module.exports = {
   allCalls: getAllcalls,
+  callsByUserID: getCallsByUserID,
   newCall : saveCall
 };
 
@@ -18,6 +19,26 @@ function getAllcalls(req, res) {
         if(err) res.json(err.message);
         
         res.json(calls);
+    });
+}
+
+function getCallsByUserID(req, res) {
+
+    var userID = req.swagger.params.userID.value;
+    console.log("Call : userID is "+userID);
+
+    if(userID == null || userID.size == 0){
+        console.log("Call : userID is NULL");
+        commonFunctions.sendNegativeResponse(res, "Null object received");
+        return;
+    }
+
+    Call.find({"userid" : userID.toString()}, { updatedAt:0, createdAt:0, _id:0, __v:0 },
+                 function(err, calls) {
+                    if(err) res.json(err.message);
+
+                    console.log("*** FOUND: "+calls.toString());
+                    res.json(calls);
     });
 }
 

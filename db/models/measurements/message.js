@@ -11,8 +11,8 @@ var currentCollection = dbconfig.SUM    // messages;
 
 mongoose.Promise = global.Promise;
 
-console.log("************ MESSAGE --> "+dbconfig.url+currentDatabase);
-var conn = mongoose.createConnection(dbconfig.url+currentDatabase);
+console.log("************ MESSAGE --> "+dbconfig.url+currentDatabase+currentCollection);
+var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
 
 
 var datestampVal = [valFunction.datestampValidator, 
