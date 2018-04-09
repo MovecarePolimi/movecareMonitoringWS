@@ -1,7 +1,7 @@
 
 module.exports = {
     //'url' : 'mongodb://localhost:27017',
-    'url' : 'mongodb://54.93.97.25:27017',
+    'url' : 'mongodb://10.0.0.67:27017',
     'measurements' : '/polimi_measurements',
     'indicators' : '/polimi_indicators',
     'SUM' : '/messages',         // Single User Message collection
