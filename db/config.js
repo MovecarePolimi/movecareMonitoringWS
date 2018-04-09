@@ -2,8 +2,8 @@
 module.exports = {
     //'url' : 'mongodb://localhost:27017',
     'url' : 'mongodb://10.0.0.67:27017',
-    'measurements' : '/polimi_measurements',
-    'indicators' : '/polimi_indicators',
+    'measurements' : '/polimiMeasurements',
+    'indicators' : '/polimiIndicators',
     'SUM' : '/messages',         // Single User Message collection
     'SUC' : '/calls',            // Single User Call collection
     'SSU' : '/smartphoneUse',    // Summary Smartphone Use collection

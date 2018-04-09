@@ -11,7 +11,9 @@ var currentCollection = dbconfig.SUM    // messages;
 
 mongoose.Promise = global.Promise;
 
-var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
+console.log("************ MESSAGE --> "+dbconfig.url+currentDatabase);
+var conn = mongoose.createConnection(dbconfig.url+currentDatabase);
+
 
 var datestampVal = [valFunction.datestampValidator, 
                     "Path '{PATH}' ('{VALUE}'): the datestamp format must be '2017-09-27'"

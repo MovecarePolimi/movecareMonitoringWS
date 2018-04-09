@@ -8,8 +8,9 @@ var currentCollection = dbconfig.SUC;    // calls
 
 mongoose.Promise = global.Promise;
 
-console.log("************ --> "+dbconfig.url+currentDatabase+currentCollection);
-var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
+console.log("************ CALL --> "+dbconfig.url+currentDatabase);
+var conn = mongoose.createConnection(dbconfig.url+currentDatabase);
+
 
 
 var datestampVal = [valFunction.datestampValidator, 
