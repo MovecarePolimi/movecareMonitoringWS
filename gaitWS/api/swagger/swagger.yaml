@@ -1,0 +1,94 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Movecare Monitoring API
+  description:
+    Manage gait user data from smartphone
+# during dev, should point to your local machine
+host: localhost:10012
+# basePath prefixes all resource paths
+basePath: /gait
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+#securityDefinitions:
+#  bearerAuth:
+#    type: apiKey
+#    name: Authorization
+#    in: header
+#security:
+#  - bearerAuth: []         # use the same name as above
+
+# format of bodies a client can send (Content-Type)
+#consumes:
+#  - multipart/form-data
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /upload:
+    x-swagger-router-controller: uploadFileCtrl # the name of the file upload controller
+    post:
+      operationId: uploadFile
+
+      summary: Uploads a file.
+      description: add a new gait file
+      consumes:
+         - multipart/form-data
+      parameters:
+         - in: formData
+           name: upfile
+           type: file
+           description: The file to upload.
+      responses:
+        "200" :
+          description : Success
+          schema :
+            $ref : "#/definitions/NewElementAdded"
+        "403":
+          description: Unauthorized request
+          schema:
+            $ref: "#/definitions/UnauthorizedErrorResponse"
+        default :
+          description : Error
+          schema:
+            $ref : "#/definitions/ErrorResponsePost"
+
+
+  /swagger:
+    x-swagger-pipe: swagger_raw
+
+
+# complex objects have schema definitions
+definitions:
+
+  NewElementAdded:
+    type: object
+    properties:
+      success:
+        type: boolean
+        description: returns true if successful
+    required:
+      - success
+
+  ErrorResponsePost:
+    type: object
+    properties:
+      success:
+        type: boolean
+        description: returns false if successful
+      error:
+        type: string
+        description: message error description
+    required:
+      - success
+      - error
+
+  UnauthorizedErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
