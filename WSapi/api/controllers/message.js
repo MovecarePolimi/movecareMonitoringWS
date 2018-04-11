@@ -8,7 +8,7 @@ var SingleMessageItem = require('../../../db/models/measurements/singleMessageIt
 var commonFunctions = require("./commonFunctions");
 
 module.exports = {
-  allmessages: getAllmessages,
+  allMessages: getAllmessages,
   messagesByUserID: getMessagesByUserID,
   newMessage : saveMessage
 };
@@ -32,7 +32,7 @@ function getAllmessages(req, res) {
 
 function getMessagesByUserID(req, res) {
 
-    var userID = req.swagger.params.userID.value;
+    var userID = req.swagger.params.userid.value;
     console.log("Message : userID is "+userID);
 
     if(userID == null || userID.size == 0){

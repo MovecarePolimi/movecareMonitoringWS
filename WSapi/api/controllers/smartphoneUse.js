@@ -8,7 +8,7 @@ var SingleSmartphoneItem = require('../../../db/models/indicators/singleSmartpho
 var commonFunctions = require("./commonFunctions");
 
 module.exports = {
-  allsmartphonesuse: getAllSmartphoneUses,
+  allSmartphoneUses: getAllSmartphoneUses,
   smartphoneUsesByUserID: getSmartphoneUsesByUserID,
   newSmartphoneUse : saveSmartphoneUse
 };

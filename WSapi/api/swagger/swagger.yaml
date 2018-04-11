@@ -60,7 +60,7 @@ paths:
     get:
       description: Returns the list of messages in the db
       # used as the method name of the controller
-      operationId: allmessages
+      operationId: allMessages
       responses:
         "200":
           description: Success
@@ -76,16 +76,16 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /messagesByUserID:
+  /messagesByUserid:
     x-swagger-router-controller: message # the name of the message controller
     get:
       description: Returns the list of messages by user in the db
       # used as the method name of the controller
-      operationId: messageByUserID
+      operationId: messagesByUserID
       parameters:
-        - name : userID
+        - name : userid
           description : the user ID
-          in : query
+          in : header
           required : true
           type: string
       responses:
@@ -160,7 +160,7 @@ paths:
       parameters:
         - name : userID
           description : the user ID
-          in : query
+          in : header
           required : true
           type: string
       responses:
@@ -184,7 +184,7 @@ paths:
     get:
       description: Returns the list of smartphoneUses in the db
       # used as the method name of the controller
-      operationId: allsmartphoneuse
+      operationId: allSmartphoneUses
       responses:
         "200":
           description: Success
@@ -237,7 +237,7 @@ paths:
       parameters:
         - name : userID
           description : the user ID
-          in : query
+          in : header
           required : true
           type: string
       responses:
@@ -260,7 +260,7 @@ paths:
     get:
       description: Returns the list of peopleUses in the db
       # used as the method name of the controller
-      operationId: allpeopleuse
+      operationId: allPeopleUses
       responses:
         "200":
           description: Success
@@ -313,7 +313,7 @@ paths:
       parameters:
         - name : userID
           description : the user ID
-          in : query
+          in : header
           required : true
           type: string
       responses:

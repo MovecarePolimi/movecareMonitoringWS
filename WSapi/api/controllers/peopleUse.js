@@ -8,7 +8,7 @@ var SinglePeopleItem = require('../../../db/models/indicators/singlePeopleItem')
 var commonFunctions = require("./commonFunctions");
 
 module.exports = {
-  allpeopleuses: getAllPeopleUses,
+  allPeopleUses: getAllPeopleUses,
   peopleUsesByUserID: getPeopleUsesByUserID,
   newPeopleUse : savePeopleUse
 };
