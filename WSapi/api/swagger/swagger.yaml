@@ -13,13 +13,6 @@ schemes:
   # tip: remove http to make production-grade
   - http
   - https
-securityDefinitions:
-  bearerAuth:
-    type: apiKey
-    name: Authorization
-    in: header
-security:
-  - bearerAuth: []         # use the same name as above
 
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -151,7 +144,7 @@ paths:
           schema:
             $ref : "#/definitions/ErrorResponsePost"
 
-  /callsByUserID:
+  /callsByUserid:
     x-swagger-router-controller: call # the name of the message controller
     get:
       description: Returns the list of calls by user in the db
@@ -228,7 +221,7 @@ paths:
           schema:
             $ref : "#/definitions/ErrorResponsePost"
   
-  /smartphoneUsesByUserID:
+  /smartphoneUsesByUserid:
     x-swagger-router-controller: smartphoneUse # the name of the message controller
     get:
       description: Returns the list of smartphoneUses by user in the db
@@ -304,7 +297,7 @@ paths:
           schema:
             $ref : "#/definitions/ErrorResponsePost"
 
-  /peopleUsesByUserID:
+  /peopleUsesByUserid:
     x-swagger-router-controller: peopleUse # the name of the message controller
     get:
       description: Returns the list of peopleUses by user in the db
