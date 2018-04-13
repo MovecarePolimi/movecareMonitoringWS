@@ -10,8 +10,8 @@ var currentCollection = dbconfig.PSU;    // peopleUse
 
 mongoose.Promise = global.Promise;
 
-console.log("************ PEOPLE_USE--> "+dbconfig.url+currentDatabase+currentCollection);
-var conn = mongoose.createConnection(dbconfig.url+currentDatabase+currentCollection);
+console.log("************ PEOPLE_USE--> "+dbconfig.url+currentDatabase);
+var conn = mongoose.createConnection(dbconfig.url+currentDatabase);
 
 var datestampVal = [valFunction.datestampValidator, 
                     "Path '{PATH}' ('{VALUE}'): the datestamp format must be '2017-09-27'"
